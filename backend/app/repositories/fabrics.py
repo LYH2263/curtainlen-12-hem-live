@@ -14,3 +14,17 @@ def get_fabric(fid: int):
         return dict(r) if r else None
     finally:
         c.close()
+
+def update_hems(fid: int, hem_top: float, hem_bottom: float):
+    c = connect()
+    try:
+        cur = c.execute(
+            "UPDATE fabrics SET hem_top=?, hem_bottom=? WHERE id=?",
+            (float(hem_top), float(hem_bottom), fid),
+        )
+        c.commit()
+    finally:
+        c.close()
+    if cur.rowcount == 0:
+        return None
+    return get_fabric(fid)
